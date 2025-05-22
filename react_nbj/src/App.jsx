@@ -8,6 +8,10 @@ function App() {
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const toggleModal = ()=>{
+    setIsModalOpen(prev => !prev);
+  }
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -22,20 +26,11 @@ function App() {
     fetchUsers();
   }, []);
 
-  const handleAddUser = (newUser) => {
-    setUsers(prevUsers => [...prevUsers, newUser]);
-  };
-
   return (
     <>
-      <SearchForm onOpenModal={() => setIsModalOpen(true)} />
-      <UserList users={users} />
-      {isModalOpen && (
-        <UserModal
-          onClose={() => setIsModalOpen(false)}
-          onAdd={handleAddUser}
-        />
-      )}
+      <SearchForm toggleModal={toggleModal} />
+      <UserList users={users} isModalOpen={isModalOpen} />
+      {isModalOpen && <UserModal toggleModal={toggleModal}/>}
     </>
   );
 }

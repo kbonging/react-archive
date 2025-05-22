@@ -1,6 +1,6 @@
 import React from "react";
 
-const SearchForm = ({ onOpenModal }) => {
+const SearchForm = ({ toggleModal }) => {
   return (
     <form className="flex items-center gap-3 mt-4 max-w-xl mx-auto">
       <input
@@ -11,7 +11,7 @@ const SearchForm = ({ onOpenModal }) => {
       <button type="submit" className="transition px-4 py-2 border rounded-lg hover:bg-slate-100">검색</button>
       <button
         type="button"
-        onClick={onOpenModal}
+        onClick={toggleModal}
         className="transition px-4 py-2 border rounded-lg hover:bg-slate-100"
       >
         추가
