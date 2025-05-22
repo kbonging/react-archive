@@ -11,26 +11,33 @@ function App() {
   const toggleModal = ()=>{
     setIsModalOpen(prev => !prev);
   }
-
+  
+  const onCreateUser = (newUser) => {
+    const lastId = users[users.length - 1].id;
+    const userWithId = { ...newUser, id:lastId +1};
+    setUsers(prev => [...prev, userWithId]);
+    toggleModal();
+  };
+  
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await fetch('https://jsonplaceholder.typicode.com/users');
         const data = await response.json();
         setUsers(data);
+        console.log(data);
       } catch (error) {
         console.error('Error fetching users:', error);
       }
     };
-
+    
     fetchUsers();
   }, []);
-
   return (
     <>
       <SearchForm toggleModal={toggleModal} />
       <UserList users={users} isModalOpen={isModalOpen} />
-      {isModalOpen && <UserModal toggleModal={toggleModal}/>}
+      {isModalOpen && <UserModal toggleModal={toggleModal} onCreateUser={onCreateUser} />}
     </>
   );
 }
