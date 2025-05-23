@@ -7,6 +7,11 @@ import UserModal from './components/UserModal';
 function App() {
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [search, setSearch] = useState('');
+
+  const onChangeSearch = (e)=>{
+    setSearch(e.target.value);
+  }
 
   const toggleModal = ()=>{
     setIsModalOpen(prev => !prev);
@@ -35,8 +40,8 @@ function App() {
   }, []);
   return (
     <>
-      <SearchForm toggleModal={toggleModal} />
-      <UserList users={users} isModalOpen={isModalOpen} />
+      <SearchForm toggleModal={toggleModal} search={search} onChangeSearch={onChangeSearch} />
+      <UserList users={users} isModalOpen={isModalOpen} search={search} />
       {isModalOpen && <UserModal toggleModal={toggleModal} onCreateUser={onCreateUser} />}
     </>
   );
