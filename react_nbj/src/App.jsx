@@ -8,6 +8,7 @@ function App() {
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const [editUser, setEditUser] = useState(null);
 
   const onChangeSearch = (e)=>{
     setSearch(e.target.value);
@@ -22,6 +23,20 @@ function App() {
     const userWithId = { ...newUser, id:lastId +1};
     setUsers(prev => [...prev, userWithId]);
     toggleModal();
+  };
+  
+  const onEditUser = (user) => {
+    setEditUser(user);     
+    setIsModalOpen(true);   
+  };
+
+  const onUpdateUser = (updatedUser) => {
+    const updatedList = users.map(user =>
+      user.id === updatedUser.id ? updatedUser : user
+    );
+    setUsers(updatedList);
+    setEditUser(null);    
+    setIsModalOpen(false);
   };
   
   useEffect(() => {
@@ -41,8 +56,15 @@ function App() {
   return (
     <>
       <SearchForm toggleModal={toggleModal} search={search} onChangeSearch={onChangeSearch} />
-      <UserList users={users} isModalOpen={isModalOpen} search={search} />
-      {isModalOpen && <UserModal toggleModal={toggleModal} onCreateUser={onCreateUser} />}
+      <UserList users={users} isModalOpen={isModalOpen} search={search} onEditUser={onEditUser} />
+      {isModalOpen && 
+        <UserModal 
+          toggleModal={toggleModal} 
+          onCreateUser={onCreateUser} 
+          onUpdateUser={onUpdateUser}
+          editUser={editUser}
+        />
+      }
     </>
   );
 }

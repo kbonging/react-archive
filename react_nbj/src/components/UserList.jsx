@@ -1,7 +1,7 @@
 
 import UserItem from './UserItem';
 
-const UserList = ({ users, search }) => {
+const UserList = ({ users, search, onEditUser }) => {
 
   const getFilterData = () => {
     if(search === ''){
@@ -17,7 +17,7 @@ const UserList = ({ users, search }) => {
      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {getFilterData().map((user) => (
-          <UserItem key={user.id} user={user} />
+          <UserItem key={user.id} user={user} onEditUser={onEditUser} />
         ))}
         
       </div>

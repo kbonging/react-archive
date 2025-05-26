@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const UserModal = ({toggleModal, onCreateUser}) => {
+const UserModal = ({toggleModal, onCreateUser, onUpdateUser, editUser}) => {
+  const isEdit = !!editUser;
 
   const [input, setInput] = useState({
     name: "",
@@ -13,6 +14,13 @@ const UserModal = ({toggleModal, onCreateUser}) => {
       name:""
     }
   });
+
+  useEffect(() => {
+    if (editUser) {
+      setInput(editUser);
+    }
+  }, [editUser]);
+
 
   const clickClose = ()=>{
     toggleModal();
@@ -30,7 +38,13 @@ const UserModal = ({toggleModal, onCreateUser}) => {
   }
 
   const onSubmit = ()=>{
-    onCreateUser(input);
+    
+    if(isEdit){
+      onUpdateUser(input);
+    }else{
+      onCreateUser(input);
+      
+    }
     setInput({
       name: "",
       username: "",
