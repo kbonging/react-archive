@@ -16,6 +16,9 @@ function App() {
 
   const toggleModal = ()=>{
     setIsModalOpen(prev => !prev);
+    if(isModalOpen){
+      setEditUser(null);
+    }
   }
   
   const onCreateUser = (newUser) => {
@@ -26,7 +29,7 @@ function App() {
   };
   
   const onEditUser = (user) => {
-    setEditUser(user);     
+    setEditUser(user); 
     setIsModalOpen(true);   
   };
 
