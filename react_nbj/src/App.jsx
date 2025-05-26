@@ -42,6 +42,11 @@ function App() {
     setIsModalOpen(false);
   };
   
+  const onDeleteUser = (targetId) => {
+    const updatedList = users.filter(user => user.id !== targetId);
+    setUsers(updatedList);
+  };
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -59,17 +64,19 @@ function App() {
   return (
     <>
       <SearchForm toggleModal={toggleModal} search={search} onChangeSearch={onChangeSearch} />
-      <UserList users={users} isModalOpen={isModalOpen} search={search} onEditUser={onEditUser} />
+      <UserList users={users} isModalOpen={isModalOpen} search={search} onEditUser={onEditUser}  onDeleteUser={onDeleteUser}/>
       {isModalOpen && 
         <UserModal 
           toggleModal={toggleModal} 
           onCreateUser={onCreateUser} 
           onUpdateUser={onUpdateUser}
           editUser={editUser}
+          onDeleteUser={onDeleteUser}
         />
       }
     </>
   );
+
 }
 
 export default App;
