@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PVING 스타일 페이지 (선택 강조 + 배너 프로그레스 + 더보기)</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome (아이콘용) -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-pO8+X61VeQqgR7u3l6Q0zD4ML2c0Y+cQ+fA6uZK8G/BmPe4XZOI1j7jxMNl2eyEPLgMLGTFOVb3TF7r2XUQjw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
+  <style>
+    /* ────────── 1) 배너: background 이미지를 cover로 꽉 차게, 검은 오버레이, 프로그레스 바 포함 ────────── */
+    #banner {
+      background-image: url('images/택배기사.jpeg'); /* 실제 파일명으로 교체 */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+    }
+    /* 검은 반투명 오버레이 (배너 텍스트가 있을 경우 대비) */
+    #banner .overlay {
+      position: absolute;
+      inset: 0;
+      background-color: rgba(0,0,0,0.3);
+      pointer-events: none;
+    }
+    /* 배너 내부 프로그레스 바 컨테이너 */
+    #banner .progress-container {
+      position: absolute;
+      bottom: 8px;         /* 바닥에서 8px 위에 위치 */
+      left: 50%;           /* 가로 중앙 정렬을 위해 left:50% */
+      transform: translateX(-50%); /* 실질적으로 가운데 정렬 */
+      width: 15%;          /* 전체 너비의 15%만 차지 */
+      height: 2px;         /* 높이를 2px 로 얕게 설정 */
+      background-color: rgba(255, 255, 255, 0.2);
+      overflow: hidden;
+      border-radius: 1px;  /* 모서리를 살짝 둥글게 */
+    }
+    /* 실제 채워지는 프로그레스 바 */
+    #banner .progress-bar {
+      width: 0;
+      height: 100%;
+      background-color: #e3342f; /* 빨간색 */
+      transform-origin: left;
+      border-radius: 1px;
+    }
+    /* 애니메이션 */
+    @keyframes fillProgress {
+      from { width: 0; }
+      to   { width: 100%; }
+    }
+    #banner .progress-bar.animate {
+      animation: fillProgress 5s linear forwards;
+    }
+
+    /* ────────── 2) 캐러셀용 스크롤바 숨기기 ────────── */
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ────────── 3) 드래그 시 커서 스타일 ────────── */
+    #movie-container.grab {
+      cursor: grab;
+      cursor: -webkit-grab;
+    }
+    #movie-container.grabbing {
+      cursor: grabbing;
+      cursor: -webkit-grabbing;
+    }
+
+    /* ────────── 4) 선택된 카드 강조 테두리 ────────── */
+    #movie-container > div.selected {
+      border: 3px solid #e3342f; /* 빨간색 테두리 */
+      border-radius: 0.5rem;      /* 둥근 모서리 */
+    }
+  </style>
+</head>
+<body class="bg-black text-white overflow-x-hidden">
+
+  <!-- ────────────────────────────────────────────────────────────── -->
+  <!-- 1) 네비게이션 바 (고정, 약간 투명하게) -->
+  <header class="fixed top-0 left-0 w-full z-50 bg-black bg-opacity-80">
+    <div class="max-w-6xl mx-auto px-4 flex items-center justify-between h-16">
+      <div class="text-red-500 text-2xl font-bold">PVING</div>
+      <nav class="hidden md:flex space-x-6 ml-8">
+        <a href="#" class="hover:text-gray-300">상영중</a>
+        <a href="#" class="hover:text-gray-300">개봉 예정</a>
+        <a href="#" class="hover:text-gray-300">장르별</a>
+        <a href="#" class="hover:text-gray-300">내가 찜한 콘텐츠</a>
+      </nav>
+      <div class="relative ml-auto hidden md:block">
+        <input
+          type="text"
+          placeholder="검색어를 입력하세요..."
+          class="bg-gray-800 placeholder-gray-400 text-sm py-1 px-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+        />
+        <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      </div>
+      <div class="md:hidden ml-auto flex items-center">
+        <button id="mobile-menu-button" class="focus:outline-none mr-4">
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+        <button class="focus:outline-none">
+          <i class="fas fa-user-circle text-xl"></i>
+        </button>
+      </div>
+    </div>
+    <div id="mobile-menu" class="md:hidden bg-black bg-opacity-90 hidden">
+      <nav class="flex flex-col space-y-2 px-4 py-3">
+        <a href="#" class="hover:text-gray-300">상영중</a>
+        <a href="#" class="hover:text-gray-300">개봉 예정</a>
+        <a href="#" class="hover:text-gray-300">장르별</a>
+        <a href="#" class="hover:text-gray-300">내가 찜한 콘텐츠</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ────────────────────────────────────────────────────────────── -->
+  <!-- 2) 배너 섹션: 헤더 아래 간격 mt-[72px], 높이 500px, 전체 너비 꽉 채우기 -->
+  <section id="banner" class="mt-[72px] h-[500px] w-full relative">
+    <!-- 검은 반투명 오버레이 -->
+    <div class="overlay"></div>
+    <!-- 프로그레스 바 -->
+    <div class="progress-container">
+      <div class="progress-bar"></div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────────────────────────────────── -->
+  <!-- 3) 배너 아래 여백: 카드 섹션과 겹치지 않도록 적당히 간격 확보 -->
+  <div class="h-[60px]"></div>
+
+  <!-- ────────────────────────────────────────────────────────────── -->
+  <!-- 4) 추천 영화 카루셀 섹션 (검은 배경) -->
+  <section class="bg-black mt-2 pb-12">
+    <div class="w-full px-4 relative">
+      <h2 class="text-2xl font-bold text-white mb-6">추천 영화</h2>
+      <div class="relative ">
+        <!-- 왼쪽 화살표 버튼 -->
+        <button id="prev-btn" class="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-black bg-opacity-60 p-3 rounded-full hover:bg-opacity-80">
+          <i class="fas fa-chevron-left text-white"></i>
+        </button>
+
+        <!-- 가로 스크롤 리스트 (draggable="false" + grab 커서) -->
+        <div 
+          id="movie-container" 
+          class="flex w-full space-x-6 overflow-x-auto scrollbar-hide px-16 grab"
+        >
+          <!-- data-index="0"~"14" 카드들 (총 15개) -->
+          <div class="min-w-[160px] flex-shrink-0 cursor-pointer" data-index="0">
+            <img src="images/베테랑.jpeg" alt="베테랑"
+                 class="rounded-lg w-[160px] h-[240px] object-cover shadow-lg"
+                 draggable="false" />
+            <p class="mt-2 text-center text-white">베테랑</p>
+          </div>
+          <div class="min-w-[160px] flex-shrink-0 cursor-pointer" data-index="1">
+            <img src="images/아이언맨.jpeg" alt="아이언맨"
+                 class="rounded-lg w-[160px] h-[240px] object-cover shadow-lg"
+                 draggable="false" />
+            <p class="mt-2 text-center text-white">아이언맨</p>
+          </div>
+          <div class="min-w-[160px] flex-shrink-0 cursor-pointer" data-index="2">
+            <img src="images/venom.jpeg" alt="Venom"
+                 class="rounded-lg w-[160px] h-[240px] object-cover shadow-lg"
+                 draggable="false" />
+            <p class="mt-2 text-center text-white">Venom</p>
+          </div>
+          <div class="min-w-[160px] flex-shrink-0 cursor-pointer" data-index="3">
+            <img src="images/아이언맨.jpeg" alt="아이언맨"
+                 class="rounded-lg w-[160px] h-[240px] object-cover shadow-lg"
+                 draggable="false" />
+            <p class="mt-2 text-center text-white">아이언맨</p>
+          </div>
+          <div class="min-w-[160px] flex-shrink-0 cursor-pointer" data-index="4">
+            <img src="images/venom.jpeg" alt="Venom"
+                 class="rounded-lg w-[160px] h-[240px] object-cover shadow-lg"
+                 draggable="false" />
+            <p class="mt-2 text-center text-white">Venom</p>
+          </div>
+          <div class="min-w-[160px] flex-shrink-0 cursor-pointer" data-index="5">
+            <img src="images/베테랑.jpeg" alt="베테랑"
+                 class="rounded-lg w-[160px] h-[240px] object-cover shadow-lg"
+                 draggable="false" />
+            <p class="mt-2 text-center text-white">베테랑</p>
+          </div>
+          <div class="min-w-[160px] flex-shrink-0 cursor-pointer" data-index="6">
+            <img src="images/아이언맨.jpeg" alt="아이언맨"
+                 class="rounded-lg w-[160px] h-[240px] object-cover shadow-lg"
+                 draggable="false" />
+            <p class="mt-2 text-center text-white">아이언맨</p>
+          </div>
+          <div class="min-w-[160px] flex-shrink-0 cursor-pointer" data-index="7">
+            <img src="images/venom.jpeg" alt="Venom"
+                 class="rounded-lg w-[160px] h-[240px] object-cover shadow-lg"
+                 draggable="false" />
+            <p class="mt-2 text-center text-white">Venom</p>
+          </div>
+          <div class="min-w-[160px] flex-shrink-0 cursor-pointer" data-index="8">
+            <img src="images/아이언맨.jpeg" alt="아이언맨"
+                 class="rounded-lg w-[160px] h-[240px] object-cover shadow-lg"
+                 draggable="false" />
+            <p class="mt-2 text-center text-white">아이언맨</p>
+          </div>
+          <div class="min-w-[160px] flex-shrink-0 cursor-pointer" data-index="9">
+            <img src="images/venom.jpeg" alt="Venom"
+                 class="rounded-lg w-[160px] h-[240px] object-cover shadow-lg"
+                 draggable="false" />
+            <p class="mt-2 text-center text-white">Venom</p>
+          </div>
+          <div class="min-w-[160px] flex-shrink-0 cursor-pointer" data-index="10">
+            <img src="images/베테랑.jpeg" alt="베테랑"
+                 class="rounded-lg w-[160px] h-[240px] object-cover shadow-lg"
+                 draggable="false" />
+            <p class="mt-2 text-center text-white">베테랑</p>
+          </div>
+          <div class="min-w-[160px] flex-shrink-0 cursor-pointer" data-index="11">
+            <img src="images/아이언맨.jpeg" alt="아이언맨"
+                 class="rounded-lg w-[160px] h-[240px] object-cover shadow-lg"
+                 draggable="false" />
+            <p class="mt-2 text-center text-white">아이언맨</p>
+          </div>
+          <div class="min-w-[160px] flex-shrink-0 cursor-pointer" data-index="12">
+            <img src="images/venom.jpeg" alt="Venom"
+                 class="rounded-lg w-[160px] h-[240px] object-cover shadow-lg"
+                 draggable="false" />
+            <p class="mt-2 text-center text-white">Venom</p>
+          </div>
+          <div class="min-w-[160px] flex-shrink-0 cursor-pointer" data-index="13">
+            <img src="images/아이언맨.jpeg" alt="아이언맨"
+                 class="rounded-lg w-[160px] h-[240px] object-cover shadow-lg"
+                 draggable="false" />
+            <p class="mt-2 text-center text-white">아이언맨</p>
+          </div>
+          <div class="min-w-[160px] flex-shrink-0 cursor-pointer" data-index="14">
+            <img src="images/venom.jpeg" alt="Venom"
+                 class="rounded-lg w-[160px] h-[240px] object-cover shadow-lg"
+                 draggable="false" />
+            <p class="mt-2 text-center text-white">Venom</p>
+          </div>
+        </div>
+
+        <!-- 오른쪽 화살표 버튼 -->
+        <button id="next-btn" class="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-black bg-opacity-60 p-3 rounded-full hover:bg-opacity-80">
+          <i class="fas fa-chevron-right text-white"></i>
+        </button>
+
+        <!-- 더보기 버튼 (최초 hidden) -->
+        <button
+          id="load-more-btn"
+          class="hidden absolute top-[-25px] right-4 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg shadow-lg z-20"
+        >
+          ...
+        </button>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────────────────────────────────── -->
+  <!-- 5) 배너 자동 전환 + 캐러셀(드래그 & 클릭) + 더보기 로직 스크립트 -->
+  <script>
+    // ─── 5-1) 모바일 메뉴 토글 ───
+    const menuBtn = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // ─── 5-2) 배너 자동 전환 + 프로그레스 애니메이션 초기화 ───
+    const bannerEl = document.getElementById('banner');
+    const progressBar = bannerEl.querySelector('.progress-bar');
+    const bannerImages = [
+      'images/아이언맨.jpeg',
+      'images/베테랑.jpeg',
+      'images/venom.jpeg',
+      'images/아이언맨.jpeg',
+      'images/venom.jpeg',
+      'images/아이언맨.jpeg',
+      'images/베테랑.jpeg',
+      'images/venom.jpeg',
+      'images/아이언맨.jpeg',
+      'images/venom.jpeg',
+      'images/아이언맨.jpeg',
+      'images/베테랑.jpeg',
+      'images/venom.jpeg',
+      'images/아이언맨.jpeg',
+      'images/venom.jpeg'
+    ];
+    let currentBannerIndex = 0;
+    const BANNER_INTERVAL = 5000; // 5초
+
+    function updateBanner(index) {
+      currentBannerIndex = index;
+      bannerEl.style.backgroundImage = `url('${bannerImages[currentBannerIndex]}')`;
+      restartProgressAnimation();
+    }
+    function restartProgressAnimation() {
+      progressBar.classList.remove('animate');
+      void progressBar.offsetWidth; // 리플로우 강제
+      progressBar.classList.add('animate');
+    }
+    function nextBannerAuto() {
+      const nextIndex = (currentBannerIndex + 1) % bannerImages.length;
+      updateBanner(nextIndex);
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      updateBanner(0);
+      setInterval(nextBannerAuto, BANNER_INTERVAL);
+    });
+
+    // ─── 5-3) 캐러셀 좌/우 스크롤 + 배너 전환 ───
+    const container = document.getElementById('movie-container');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const SCROLL_DISTANCE = 184; // 카드 너비 160 + 간격 24
+
+    prevBtn.addEventListener('click', () => {
+      container.scrollBy({ left: -SCROLL_DISTANCE, behavior: 'smooth' });
+      const prevIndex = (currentBannerIndex - 1 + bannerImages.length) % bannerImages.length;
+      updateBanner(prevIndex);
+      highlightSelected(prevIndex);
+      checkScrollEnd();
+    });
+    nextBtn.addEventListener('click', () => {
+      container.scrollBy({ left: SCROLL_DISTANCE, behavior: 'smooth' });
+      const nextIndex = (currentBannerIndex + 1) % bannerImages.length;
+      updateBanner(nextIndex);
+      highlightSelected(nextIndex);
+      checkScrollEnd();
+    });
+
+    // ─── 5-4) 드래그 앤 드롭 (카드 클릭 시) ───
+    let isDown = false, startX, scrollLeft;
+    container.addEventListener('mousedown', (e) => {
+      const card = e.target.closest('[data-index]');
+      if (!card) return;
+      isDown = true;
+      container.classList.add('grabbing');
+      startX = e.pageX - container.offsetLeft;
+      scrollLeft = container.scrollLeft;
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    });
+    function onMouseMove(e) {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - container.offsetLeft;
+      const walk = (x - startX) * 1;
+      container.scrollLeft = scrollLeft - walk;
+      checkScrollEnd();
+    }
+    function onMouseUp() {
+      isDown = false;
+      container.classList.remove('grabbing');
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+      checkScrollEnd();
+    }
+
+    // ─── 5-5) 썸네일 클릭 시: 배너 업데이트 + 카드 강조 ───
+    function highlightSelected(index) {
+      document.querySelectorAll('#movie-container > div[data-index]').forEach(div => {
+        div.classList.remove('selected');
+      });
+      const selectedCard = document.querySelector(`#movie-container > div[data-index="${index}"]`);
+      if (selectedCard) {
+        selectedCard.classList.add('selected');
+      }
+    }
+    document.querySelectorAll('#movie-container > div[data-index]').forEach(item => {
+      item.addEventListener('click', () => {
+        const idx = parseInt(item.getAttribute('data-index'), 10);
+        updateBanner(idx);
+        highlightSelected(idx);
+        checkScrollEnd();
+      });
+    });
+
+    // ─── 5-6) “더보기” 버튼 노출 로직 ───
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    function checkScrollEnd() {
+      if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 1) {
+        loadMoreBtn.classList.remove('hidden');
+      } else {
+        loadMoreBtn.classList.add('hidden');
+      }
+    }
+    // 초기 체크
+    document.addEventListener('DOMContentLoaded', () => {
+      checkScrollEnd();
+    });
+    // 스크롤 이벤트에도 체크
+    container.addEventListener('scroll', () => {
+      checkScrollEnd();
+    });
+    // 더보기 버튼 클릭 시 동작
+    loadMoreBtn.addEventListener('click', () => {
+      alert('더 많은 영화를 불러옵니다...');
+      // 실제 API 호출 또는 페이지 이동 로직을 여기에 구현하세요.
+    });
+  </script>
+</body>
+</html>
