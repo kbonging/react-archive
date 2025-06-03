@@ -12,7 +12,7 @@ export default function Banner({ currentIndex }) {
       void bar.offsetWidth;
       bar.classList.add('animate');
     }
-  }, [currentIndex]);
+  }, []);
 
   return (
     <section
@@ -32,6 +32,12 @@ export default function Banner({ currentIndex }) {
           style={{ animation: 'fillProgress 5s linear forwards' }}
         />
       </div>
+      <style>{`
+        @keyframes fillProgress {
+          from { width: 0%; }
+          to { width: 100%; }
+        }
+      `}</style>
     </section>
   );
 }

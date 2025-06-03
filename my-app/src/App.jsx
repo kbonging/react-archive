@@ -7,10 +7,15 @@ import { movieImages } from './assets/movieImages';
 
 function App() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [key, setKey] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % movieImages.length);
+      setCurrentIndex((prev) => {
+        const next = (prev + 1) % movieImages.length;
+        setKey((k) => k + 1); // 프로그레스 바 리셋
+        return next;
+      });
     }, 5000);
     return () => clearInterval(interval);
   }, []);
@@ -18,11 +23,14 @@ function App() {
   return (
     <div className="bg-black text-white overflow-x-hidden">
       <Navbar />
-      <Banner currentIndex={currentIndex} />
+      <Banner currentIndex={currentIndex} key={key} />
       <div className="h-[60px]" />
       <MovieCarousel
         currentIndex={currentIndex}
-        setCurrentIndex={setCurrentIndex}
+        setCurrentIndex={(idx) => {
+          setCurrentIndex(idx);
+          setKey((k) => k + 1);
+        }}
       />
     </div>
   );
