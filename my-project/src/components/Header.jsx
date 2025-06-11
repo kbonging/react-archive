@@ -33,9 +33,11 @@ export default function Header() {
         <div className="max-w-full px-4 flex items-center justify-between h-16">
           {/* 로고 + 네비게이션 (원본 그대로) */}
           <div className="flex items-center gap-x-12">
-            <div className="text-red-600 text-3xl font-extrabold drop-shadow-lg">
-              PVING
-            </div>
+            <Link to="/" >
+              <div className="text-red-600 text-3xl font-extrabold drop-shadow-lg">
+                PVING
+              </div>
+            </Link>
               <nav className="flex items-center space-x-7 text-sm font-semibold">
                 <Link to="/movies/now_playing" className="relative text-[#d9d9d9] hover:text-red-500 group">
                   상영중
