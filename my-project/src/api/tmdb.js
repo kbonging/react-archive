@@ -18,7 +18,7 @@ export async function fetchMoviesByCategory(category, page = 1) {
   const { data } = await axios.get(`${BASE_URL}${endpoint}`, {
     params: { api_key: API_KEY, language: "ko-KR", page },
   });
-  
+  console.log(data);
   return data.results;
 }
 // export async function fetchTrending() {

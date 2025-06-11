@@ -43,12 +43,12 @@ export default function Header() {
                   상영중
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
                 </Link>
-                <Link to="/movies/Upcoming" className="relative text-[#d9d9d9] hover:text-red-500 group">
+                <Link to="/movies/upcoming" className="relative text-[#d9d9d9] hover:text-red-500 group">
                   개봉 예정
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
                 </Link>
-                <Link to="/movies/Genres" className="relative text-[#d9d9d9] hover:text-red-500 group">
-                  장르별
+                <Link to="/movies/trending" className="relative text-[#d9d9d9] hover:text-red-500 group">
+                  오늘의 영화
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
                 </Link>
                 <Link to="/movies/favorite" className="relative text-[#d9d9d9] hover:text-red-500 group">
