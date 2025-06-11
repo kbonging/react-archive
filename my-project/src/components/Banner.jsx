@@ -1,6 +1,6 @@
 // src/components/Banner.jsx
 import React, { useEffect, useState } from 'react';
-import { fetchTrending } from '../api/tmdb';
+import { fetchMoviesByCategory } from '../api/tmdb';
 
 // BACKDROP_SIZE 옵션: w300, w780, w1280, original
 const BACKDROP_SIZE = 'w1280';
@@ -12,7 +12,7 @@ export default function Banner() {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    fetchTrending().then(setMovies).catch(console.error);
+    fetchMoviesByCategory('trending').then(setMovies).catch(console.error);
   }, []);
 
   useEffect(() => {

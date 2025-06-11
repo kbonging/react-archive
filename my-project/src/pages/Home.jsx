@@ -1,7 +1,7 @@
 import Header from "../components/Header";
 import Banner from "../components/Banner";
 import React, { useEffect, useState } from "react";
-import { fetchPopular, fetchNowPlaying } from "../api/tmdb";
+import { fetchMoviesByCategory } from "../api/tmdb";
 import MovieSet from "../components/MovieSet";
 
 export default function Home() {
@@ -9,8 +9,8 @@ export default function Home() {
   const [nowPlaying, setNowPlaying] = useState([]);
 
   useEffect(() => {
-    fetchPopular().then(setPopular).catch(console.error);
-    fetchNowPlaying().then(setNowPlaying).catch(console.error);
+    fetchMoviesByCategory('popular').then(setPopular).catch(console.error);
+    fetchMoviesByCategory('now_playing').then(setNowPlaying).catch(console.error);
   }, []);
 
   // console.log(popular);

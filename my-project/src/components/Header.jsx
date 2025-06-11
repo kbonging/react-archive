@@ -1,5 +1,6 @@
 // src/components/Header.jsx
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const popularSearches = [
   "월드 오브 스트릿 우먼 파이터",
@@ -35,24 +36,24 @@ export default function Header() {
             <div className="text-red-600 text-3xl font-extrabold drop-shadow-lg">
               PVING
             </div>
-            <nav className="flex items-center space-x-7 text-sm font-semibold">
-              <a href="#" className="relative text-[#d9d9d9] hover:text-red-500 group">
-                상영중
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-              </a>
-              <a href="#" className="relative text-[#d9d9d9] hover:text-red-500 group">
-                개봉 예정
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-              </a>
-              <a href="#" className="relative text-[#d9d9d9] hover:text-red-500 group">
-                장르별
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-              </a>
-              <a href="#" className="relative text-[#d9d9d9] hover:text-red-500 group">
-                찜 목록
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-              </a>
-            </nav>
+              <nav className="flex items-center space-x-7 text-sm font-semibold">
+                <Link to="/movies/now_playing" className="relative text-[#d9d9d9] hover:text-red-500 group">
+                  상영중
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+                </Link>
+                <Link to="/movies/Upcoming" className="relative text-[#d9d9d9] hover:text-red-500 group">
+                  개봉 예정
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+                </Link>
+                <Link to="/movies/Genres" className="relative text-[#d9d9d9] hover:text-red-500 group">
+                  장르별
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+                </Link>
+                <Link to="/movies/favorite" className="relative text-[#d9d9d9] hover:text-red-500 group">
+                  찜 목록
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+                </Link>
+              </nav>
           </div>
 
           {/* 검색 아이콘 + 프로필 */}
