@@ -2,39 +2,62 @@
 import React, { useEffect, useState } from 'react';
 import { fetchMoviesByCategory } from '../api/tmdb';
 
-// BACKDROP_SIZE 옵션: w300, w780, w1280, original
-const BACKDROP_SIZE = 'w1280';
+const BACKDROP_SIZE  = 'w1280';
 const IMAGE_BASE_URL = `https://image.tmdb.org/t/p/${BACKDROP_SIZE}`;
-const INTERVAL = 5000;
+const INTERVAL       = 7000;
+const FADE_DURATION  = 3000;  // 이제 3000ms = 3초로 늘렸습니다.
 
 export default function Banner() {
   const [movies, setMovies] = useState([]);
-  const [index, setIndex] = useState(0);
+  const [index,  setIndex]  = useState(0);
+  const [isFadingOut, setFade] = useState(false);
 
+  //  trending 영화 불러오기
   useEffect(() => {
-    fetchMoviesByCategory('trending').then(setMovies).catch(console.error);
+    fetchMoviesByCategory('trending')
+      .then(setMovies)
+      .catch(console.error);
   }, []);
 
+  // 일정 간격마다 페이드 트리거
   useEffect(() => {
     if (!movies.length) return;
-    const timer = setInterval(() => {
-      setIndex(i => (i + 1) % movies.length);
-    }, INTERVAL);
+    const timer = setInterval(() => setFade(true), INTERVAL);
     return () => clearInterval(timer);
   }, [movies]);
 
+  //  애니메이션이 끝나면 인덱스 변경
+  const onTransitionEnd = () => {
+    if (!isFadingOut) return;
+    setIndex(i => (i + 1) % movies.length);
+    setFade(false);
+  };
+
   if (!movies.length) {
-    return <div className="mt-[72px] h-[500px] bg-gray-900"></div>;
+    return <div className="h-screen bg-gray-900" />;
   }
 
-  const movie = movies[index];
+  const backdropUrl = `${IMAGE_BASE_URL}${movies[index].backdrop_path}`;
+
   return (
-    <section
-      className="mt-[63px] h-[600px] w-full relative bg-center bg-no-repeat"
-      style={{ backgroundImage: `url(${IMAGE_BASE_URL}${movie.backdrop_path})` }}
-    >
-      <div className="absolute inset-0 bg-black bg-opacity-30"></div>
-      {/* 프로그레스 바 제거 */}
-    </section>
+    <>
+      {/* 배경 이미지 */}
+      <div
+        className="fixed inset-0 z-0 bg-center bg-cover"
+        style={{ backgroundImage: `url(${backdropUrl})` }}
+      />
+
+      {/* 트렌지션션 */}
+      <div
+        className="fixed inset-0 z-10 bg-black pointer-events-none"
+        style={{
+          opacity: isFadingOut ? 1 : 0,
+          transitionProperty: 'opacity',
+          transitionDuration: `${FADE_DURATION}ms`,
+          transitionTimingFunction: 'ease-in-out',
+        }}
+        onTransitionEnd={onTransitionEnd}
+      />
+    </>
   );
 }

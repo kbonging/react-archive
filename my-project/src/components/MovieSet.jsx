@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
-const CARD_WIDTH = 160 + 24; // 카드 너비 + 마진
+const CARD_WIDTH = 350 + 24; // 카드 너비 + 마진
 
 export default function MovieSet({ movies, title }) {
   const rowRef = useRef(null);
@@ -57,7 +57,9 @@ export default function MovieSet({ movies, title }) {
 
   return (
     <div className="relative h-[320px] ">
-      <h2 className="text-2xl font-bold text-white mb-4 mt-4 px-4 pt-4">{title}</h2>
+      <h2 className="text-2xl font-bold text-white mb-4 mt-4 px-4 pt-4">
+        {title}
+      </h2>
       {canScrollLeft && (
         <button
           className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-black bg-opacity-60 rounded-full hover:bg-opacity-80"

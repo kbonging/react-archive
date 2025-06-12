@@ -1,8 +1,8 @@
 // src/routes/AppRouter.jsx
 import { Routes, Route } from "react-router-dom";
-import Home             from "../pages/Home";
-import MovieListPage    from "../pages/MovieListPage";
-import MovieDetailPage  from "../pages/MovieDetailPage";
+import Home from "../pages/Home";
+import MovieListPage from "../pages/MovieListPage";
+import MovieDetailPage from "../pages/MovieDetailPage";
 
 export default function AppRouter() {
   return (
@@ -27,7 +27,6 @@ export default function AppRouter() {
         element={<MovieListPage category="favorite" />}
       />
 
-      
       <Route path="/movies/:id" element={<MovieDetailPage />} />
     </Routes>
   );
