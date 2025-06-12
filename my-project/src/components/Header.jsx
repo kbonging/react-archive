@@ -177,7 +177,7 @@ export default function Header() {
                       return (
                         <Link
                           key={movie.id}
-                          to={`/movies/${movie.id}`}
+                          to={`/movies/detail/${movie.id}`}
                           onClick={() => onSearch(movie.title)}
                           className="flex flex-col items-center"
                         >
