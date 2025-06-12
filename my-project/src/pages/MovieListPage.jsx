@@ -93,7 +93,7 @@ export default function MovieListPage() {
               <button
                 onClick={handleLoadMore}
                 disabled={loadingMore}
-                className="mx-auto flex items-center justify-center hover:scale-110 transition-transform"
+                className="w-[1000px] y-30 flex items-center justify-center hover:scale-110 transition-transform"
                 aria-label="더보기"
               >
                 <svg
