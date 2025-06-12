@@ -1,6 +1,7 @@
 // src/components/MovieRow.jsx
 import React, { useRef, useState, useEffect } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import MovieCard from "./MovieCard";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 const CARD_WIDTH = 160 + 24; // 카드 너비 + 마진
@@ -56,7 +57,7 @@ export default function MovieSet({ movies, title }) {
   };
 
   return (
-    <div className="relative h-[320px] ">
+    <div className="relative h-[400px] ">
       <h2 className="text-2xl font-bold text-white mb-4 mt-4 px-4 pt-4">{title}</h2>
       {canScrollLeft && (
         <button
@@ -84,19 +85,8 @@ export default function MovieSet({ movies, title }) {
         onMouseLeave={onMouseUp}
       >
         {movies.map((movie) => (
-          <div
-            key={movie.id}
-            className="card-item min-w-[160px] flex-shrink-0 cursor-pointer hover:scale-105 transform transition scroll-snap-align-start"
-          >
-            <img
-              src={`${IMAGE_BASE_URL}${movie.poster_path}`}
-              alt={movie.title}
-              className="rounded-lg w-[160px] h-[240px] object-cover shadow-lg"
-              draggable={false}
-            />
-            {/* <p className="mt-2 text-center text-white text-sm truncate">
-              {movie.title}
-            </p> */}
+          <div key={movie.id} className="card-item flex-shrink-0 w-[200px]">
+            <MovieCard key={movie.id} movie={movie} />
           </div>
         ))}
       </div>
