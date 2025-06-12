@@ -4,10 +4,11 @@ const API_KEY = "";
 const BASE_URL = "https://api.themoviedb.org/3";
 
 const categoryMap = {
-  popular: "/movie/popular",
-  now_playing: "/movie/now_playing",
-  upcoming: "/movie/upcoming",
-  trending: "/trending/movie/week",
+  popular: "/movie/popular", // 인기 영화
+  now_playing: "/movie/now_playing", // 현재 상영중
+  upcoming: "/movie/upcoming", // 개봉 예정 (이거 이미 개봉한 내용도 나옴)
+  trending: "/trending/movie/day", // 오늘의 영화화
+  top_rated: "/movie/top_rated" // 최고 평점
   // 필요한 경우 사용자 정의 로직도 가능
 };
 
@@ -16,7 +17,7 @@ export async function fetchMoviesByCategory(category, page = 1) {
   if (!endpoint) throw new Error(`지원하지 않는 카테고리: ${category}`);
 
   const { data } = await axios.get(`${BASE_URL}${endpoint}`, {
-    params: { api_key: API_KEY, language: "ko-KR", page },
+    params: { api_key: API_KEY, language: "ko-KR", page, region:"KR" },
   });
 
   return data.results;

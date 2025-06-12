@@ -43,6 +43,13 @@ export default function Header() {
             </Link>
             <nav className="flex items-center space-x-7 text-sm font-semibold">
               <Link
+                to="/movies/popular"
+                className="relative text-[#d9d9d9] hover:text-red-500 group"
+              >
+                인기 영화
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+              </Link>
+              <Link
                 to="/movies/now_playing"
                 className="relative text-[#d9d9d9] hover:text-red-500 group"
               >
@@ -61,6 +68,13 @@ export default function Header() {
                 className="relative text-[#d9d9d9] hover:text-red-500 group"
               >
                 오늘의 영화
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+              </Link>
+              <Link
+                to="/movies/top_rated"
+                className="relative text-[#d9d9d9] hover:text-red-500 group"
+              >
+                평점순
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
               </Link>
               <Link
