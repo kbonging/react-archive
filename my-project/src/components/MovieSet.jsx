@@ -56,8 +56,8 @@ export default function MovieSet({ movies, title }) {
   };
 
   return (
-    <div className="relative ">
-      <h2 className="text-2xl font-bold text-white mb-4">{title}</h2>
+    <div className="relative h-[320px] ">
+      <h2 className="text-2xl font-bold text-white mb-4 mt-4 px-4 pt-4">{title}</h2>
       {canScrollLeft && (
         <button
           className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-black bg-opacity-60 rounded-full hover:bg-opacity-80"
