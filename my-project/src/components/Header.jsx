@@ -32,9 +32,9 @@ export default function Header() {
     <>
       {/* 1) 고정 헤더 */}
       <header className="fixed top-0 left-0 w-full z-50 bg-black text-white shadow-lg backdrop-blur-sm">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+        <div className=" mx-auto px-6 h-16 flex items-center justify-between">
           {/* 로고 + 네비게이션 */}
-          <div className="flex items-center gap-x-12">
+          <div className="flex items-center gap-x-8">
             <Link to="/">
               <div className="text-red-600 text-3xl font-extrabold drop-shadow-lg">
                 PVING
