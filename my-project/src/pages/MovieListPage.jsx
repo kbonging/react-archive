@@ -11,6 +11,7 @@ const CATEGORY_TITLES = {
   upcoming: "개봉 예정",
   top_rated: "최고 평점",
   favorite: "찜 목록",
+  trending: "오늘의 영화",
 };
 
 export default function MovieListPage(){
@@ -48,19 +49,47 @@ export default function MovieListPage(){
     fetchMultiplePages();
 
   }, [category]);
-    if(loading) return <div className="text-white p-10">로딩 중...</div>;
+    //if(loading) return <div className="text-white p-10">로딩 중...</div>;
   return (
     <div className="bg-black min-h-screen text-white py-10">
-        <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
+      {loading ? (
+        <>
+          <div className="min-h-screen flex items-center justify-center">
+          <div className="w-20 h-20 border-[6px] border-red-600 border-t-transparent rounded-full animate-spin" />
+        </div>
+        </>
+      ) : (
+        <>
+          <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-bold mb-8">
             {CATEGORY_TITLES[category] || "영화"}
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-8 gap-6">
-            {movies.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} />
-            ))}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-8 gap-6 ">
+              {movies.map((movie) => (
+                  <MovieCard key={movie.id} movie={movie} />
+              ))}
             </div>
-        </div>
+          </div>
+          {/* 더보기 버튼 */}
+          <div className="flex justify-center mt-8">
+            <button
+              className="mx-auto mt-10 flex items-center justify-center hover:scale-110 transition-transform"
+              aria-label="더보기"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="48"
+                height="48"
+                fill="white"
+                viewBox="0 0 24 24"
+                className="w-12 h-12 text-red-500"
+              >
+                <path d="M7 10l5 5 5-5H7z" />
+              </svg>
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
