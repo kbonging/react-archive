@@ -4,7 +4,7 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import MovieCard from "./MovieCard";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
-const CARD_WIDTH = 350 + 24; // 카드 너비 + 마진
+const CARD_WIDTH = 650 + 24; // 카드 너비 + 마진
 
 export default function MovieSet({ movies, title }) {
   const rowRef = useRef(null);

@@ -144,7 +144,7 @@ export default function Header() {
                 searchOpen ? "translate-y-0" : "-translate-y-full"
               }`}
             >
-              <div className="mt-16 w-full bg-gray-700 opacity-95 px-4 py-6 h-[calc(100vh-4rem)] text-white">
+              <div className=" w-full bg-gray-700 opacity-95 px-4 py-32 h-[calc(100vh)] text-white z-50">
                 {/* 검색창 */}
                 <div className="flex items-center justify-center">
                   <input
