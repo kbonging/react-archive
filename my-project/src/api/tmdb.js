@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_KEY = "756004d44a98ff07e34549cdd940f3c4";
+const API_KEY = "";
 const BASE_URL = "https://api.themoviedb.org/3";
 
 const categoryMap = {
@@ -32,6 +32,7 @@ export async function searchMovies(query) {
   if (!res.ok) throw new Error("검색 중 오류 발생");
   return res.json(); // { page, results: [ {...}, ... ], total_pages, total_results }
 }
+
 // export async function fetchTrending() {
 //   const { data } = await axios.get(`${BASE_URL}/trending/movie/week`, {
 //     params: { api_key: API_KEY },
