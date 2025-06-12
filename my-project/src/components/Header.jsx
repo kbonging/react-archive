@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { searchMovies } from "../api/tmdb";
 import useDebounced from "../hooks/useDebounced";
+import MovieCard from "./MovieCard";
 
 export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -25,7 +26,7 @@ export default function Header() {
     const t = term.trim();
     if (!t) return;
     setSearchOpen(false);
-    navigate(`/search?query=${encodeURIComponent(t)}`);
+    //navigate(`/search?query=${encodeURIComponent(t)}`);
   };
 
   return (
@@ -41,6 +42,13 @@ export default function Header() {
               </div>
             </Link>
             <nav className="flex items-center space-x-7 text-sm font-semibold">
+              <Link
+                to="/movies/popular"
+                className="relative text-[#d9d9d9] hover:text-red-500 group"
+              >
+                인기 영화
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+              </Link>
               <Link
                 to="/movies/now_playing"
                 className="relative text-[#d9d9d9] hover:text-red-500 group"
@@ -60,6 +68,13 @@ export default function Header() {
                 className="relative text-[#d9d9d9] hover:text-red-500 group"
               >
                 오늘의 영화
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+              </Link>
+              <Link
+                to="/movies/top_rated"
+                className="relative text-[#d9d9d9] hover:text-red-500 group"
+              >
+                평점순
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
               </Link>
               <Link
@@ -170,28 +185,9 @@ export default function Header() {
                   style={{ msOverflowStyle: "none", scrollbarWidth: "none" }}
                 >
                   {results.length > 0 ? (
-                    results.map((movie) => {
-                      const poster = movie.poster_path
-                        ? `https://image.tmdb.org/t/p/w300${movie.poster_path}`
-                        : "/no-poster.png";
-                      return (
-                        <Link
-                          key={movie.id}
-                          to={`/movies/${movie.id}`}
-                          onClick={() => onSearch(movie.title)}
-                          className="flex flex-col items-center"
-                        >
-                          <img
-                            src={poster}
-                            alt={movie.title}
-                            className="h-40 rounded-lg mb-1 "
-                          />
-                          <p className="text-[10px] truncate text-white">
-                            {movie.title}
-                          </p>
-                        </Link>
-                      );
-                    })
+                    results.map((movie) => 
+                      <MovieCard key={movie.id} movie={movie} onSearch={onSearch} />
+                    )
                   ) : (
                     <p className="text-gray-400">검색 결과가 없습니다.</p>
                   )}

@@ -1,4 +1,4 @@
-// import { useParams } from "react-router-dom"; 
+import { useParams } from "react-router-dom"; 
 // 이부분 수정할게요 봉중이형 라우터 좀 수정해서 상세페이지 로 이동하려면 경로가 중복이되서 카테고리 랑 상세랑 이렇게 수정했어어
 import { useEffect, useState } from "react";
 import { fetchMoviesByCategory } from "../api/tmdb";
@@ -13,9 +13,8 @@ const CATEGORY_TITLES = {
   trending: "오늘의 영화",
 };
 
-export default function MovieListPage({ category }) {
-  // const { category } = useParams(); // URL: /movies/:category  
-  //  이부분 수정할게요 봉중이형 프롭스로 전달 했어 저거를 안받으면
+export default function MovieListPage() {
+  const { category } = useParams(); // URL: /movies/:category  
   const [movies, setMovies] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -84,7 +83,7 @@ export default function MovieListPage({ category }) {
             <h2 className="text-3xl font-bold mb-8">
               {CATEGORY_TITLES[category] || "영화"}
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-8 gap-6 ">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 ">
               {movies.map((movie) => (
                 <MovieCard key={movie.id} movie={movie} />
               ))}
