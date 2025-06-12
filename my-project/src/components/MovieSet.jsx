@@ -56,7 +56,7 @@ export default function MovieSet({ movies, title }) {
   };
 
   return (
-    <div className="relative mb-8">
+    <div className="relative ">
       <h2 className="text-2xl font-bold text-white mb-4">{title}</h2>
       {canScrollLeft && (
         <button
