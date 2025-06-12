@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_KEY = "";
+const API_KEY = "756004d44a98ff07e34549cdd940f3c4";
 const BASE_URL = "https://api.themoviedb.org/3";
 
 const categoryMap = {
@@ -31,6 +31,21 @@ export async function searchMovies(query) {
   );
   if (!res.ok) throw new Error("검색 중 오류 발생");
   return res.json(); // { page, results: [ {...}, ... ], total_pages, total_results }
+}
+
+//상세페이지 호출
+export async function fetchMovieDetails(id) {
+  const { data } = await axios.get(`${BASE_URL}/movie/${id}`, {
+    params: { api_key: API_KEY, language: "ko-KR" },
+  });
+  return data;
+}
+
+//출연자 정보 요청
+export async function fetchMovieCredits(id) {
+  const res = await fetch(`${BASE_URL}/movie/${id}/credits?api_key=${API_KEY}&language=ko`);
+  if (!res.ok) throw new Error('출연진 정보를 불러오는 중 오류가 발생했습니다.');
+  return res.json();  // { cast: [...], crew: [...] }
 }
 
 // export async function fetchTrending() {
