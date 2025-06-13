@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { fetchMovieDetails, fetchMovieCredits } from "../api/tmdb";
+import { isFavoriteMovie, addFavoriteMovie, removeFavoriteMovie } from "../api/favorites";
+
 
 export default function MovieDetailPage() {
   const { id } = useParams();           // URL에서 movie ID를 받아옴
@@ -9,6 +11,7 @@ export default function MovieDetailPage() {
   const [credits, setCredits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isLiked, setIsLiked] = useState(false); // 찜 여부 설정
 
   // 1) 영화 기본 상세 정보 로딩
   useEffect(() => {
@@ -18,6 +21,7 @@ export default function MovieDetailPage() {
     fetchMovieDetails(id)
       .then((data) => {
         setMovie(data);
+        setIsLiked(isFavoriteMovie(data.id));
       })
       .catch((err) => {
         console.error(err);
@@ -39,6 +43,19 @@ export default function MovieDetailPage() {
         setLoading(false);
       });
   }, [id]);
+
+  // 찜 버튼 
+  const toggleFavorite = () => {
+    if (!movie) return;
+
+    if (isLiked) {
+      removeFavoriteMovie(movie.id);
+      setIsLiked(false);
+    } else {
+      addFavoriteMovie(movie);
+      setIsLiked(true);
+    }
+  };
 
   if (loading || !movie) {
     return (
@@ -89,8 +106,36 @@ export default function MovieDetailPage() {
             </div>
 
             <div className="flex space-x-4">
-              <button className="flex items-center px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-200">
-                <i className="fas fa-plus text-xl mr-2"></i> 찜하기
+              <button onClick={toggleFavorite} className="flex items-center space-x-2 p-2">
+                {isLiked ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-red-500"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    stroke="none"
+                  >
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-gray-500 hover:text-red-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                    />
+                  </svg>
+                )}
+                <span className={`text-sm font-medium ${isLiked ? "text-red-500" : "text-gray-500"}`}>
+                  찜
+                </span>
               </button>
               <Link
                 to="/"
