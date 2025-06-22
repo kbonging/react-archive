@@ -1,16 +1,19 @@
 // src/components/Header.jsx
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { searchMovies } from "../api/tmdb";
 import useDebounced from "../hooks/useDebounced";
 import MovieCard from "./MovieCard";
+import { MENU_ITEMS } from "../util/constants";
 
 export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounced(query, 300);
   const [results, setResults] = useState([]);
-  const navigate = useNavigate();
+  const location = useLocation();
+
+  const menuItems = MENU_ITEMS;
 
   useEffect(() => {
     if (!debouncedQuery) {
@@ -42,48 +45,27 @@ export default function Header() {
               </div>
             </Link>
             <nav className="flex items-center space-x-7 text-sm font-semibold">
-              <Link
-                to="/movies/popular"
-                className="relative text-[#d9d9d9] hover:text-red-500 group"
-              >
-                인기 영화
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-              </Link>
-              <Link
-                to="/movies/now_playing"
-                className="relative text-[#d9d9d9] hover:text-red-500 group"
-              >
-                상영중
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-              </Link>
-              <Link
-                to="/movies/upcoming"
-                className="relative text-[#d9d9d9] hover:text-red-500 group"
-              >
-                개봉 예정
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-              </Link>
-              <Link
-                to="/movies/trending"
-                className="relative text-[#d9d9d9] hover:text-red-500 group"
-              >
-                오늘의 영화
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-              </Link>
-              <Link
-                to="/movies/top_rated"
-                className="relative text-[#d9d9d9] hover:text-red-500 group"
-              >
-                평점순
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-              </Link>
-              <Link
-                to="/movies/favorite"
-                className="relative text-[#d9d9d9] hover:text-red-500 group"
-              >
-                찜 목록
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-              </Link>
+              {menuItems.map(({ path, label }) => {
+                // 현재 경로가 메뉴 경로와 일치하는지 체크
+                const isActive = location.pathname === path;
+
+                return (
+                  <Link
+                    key={path}
+                    to={path}
+                    className={`relative ${
+                      isActive ? "text-red-500" : "text-[#d9d9d9]"
+                    } hover:text-red-500 group`}
+                  >
+                    {label}
+                    <span
+                      className={`absolute bottom-0 left-0 w-full h-0.5 bg-red-600 transition-transform duration-300 origin-left ${
+                        isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                      }`}
+                    />
+                  </Link>
+                );
+              })}
             </nav>
           </div>
 

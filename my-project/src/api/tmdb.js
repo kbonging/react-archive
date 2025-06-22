@@ -1,16 +1,10 @@
 import axios from "axios";
+import { CATEGORY_API_PATHS } from "../util/constants"; 
 
 const API_KEY = "";
 const BASE_URL = "https://api.themoviedb.org/3";
 
-const categoryMap = {
-  popular: "/movie/popular", // 인기 영화
-  now_playing: "/movie/now_playing", // 현재 상영중
-  upcoming: "/movie/upcoming", // 개봉 예정 (이거 이미 개봉한 내용도 나옴)
-  trending: "/trending/movie/day", // 오늘의 영화화
-  top_rated: "/movie/top_rated", // 최고 평점
-  // 필요한 경우 사용자 정의 로직도 가능
-};
+const categoryMap = CATEGORY_API_PATHS;
 
 export async function fetchMoviesByCategory(category, page = 1) {
   const endpoint = categoryMap[category];

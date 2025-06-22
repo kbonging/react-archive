@@ -4,11 +4,15 @@ import Banner from '../components/Banner';
 import Header from '../components/Header';
 import MovieSet from '../components/MovieSet';
 import { fetchMoviesByCategory } from '../api/tmdb';
+import usePageTitle from "../hooks/usePageTitle";
+import Footer from '../components/Footer';
 
 export default function Home() {
   const [popular, setPopular]     = useState([]);
   const [nowPlaying, setNowPlaying] = useState([]);
   const [loading, setLoading]     = useState(true);
+
+  usePageTitle(`PVING`);
 
   useEffect(() => {
     (async () => {
@@ -42,7 +46,7 @@ export default function Home() {
 
       {/* 2) 카드 컨텐츠: 반드시 Banner 오버레이(z-10) 위에 올라오도록 z-index를 높여줌 */}
       <div className="relative z-20 min-h-screen bg-black bg-opacity-0">
-        <Header />
+        {/* <Header /> */}
 
         {/* Header 아래로 내려오도록 충분한 패딩 */}
         <div className="container mx-auto px-4 pt-[570px] pb-12">

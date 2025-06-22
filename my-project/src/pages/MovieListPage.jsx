@@ -1,17 +1,11 @@
 import { useParams } from "react-router-dom"; 
-// 이부분 수정할게요 봉중이형 라우터 좀 수정해서 상세페이지 로 이동하려면 경로가 중복이되서 카테고리 랑 상세랑 이렇게 수정했어어
 import { useEffect, useState } from "react";
 import { fetchMoviesByCategory } from "../api/tmdb";
 import MovieCard from "../components/MovieCard";
+import usePageTitle from "../hooks/usePageTitle";
+import { CATEGORY_TITLES } from "../util/constants";
 
-const CATEGORY_TITLES = {
-  now_playing: "상영중",
-  popular: "인기",
-  upcoming: "개봉 예정",
-  top_rated: "최고 평점",
-  favorite: "찜 목록",
-  trending: "오늘의 영화",
-};
+const categoryTitles = CATEGORY_TITLES;
 
 export default function MovieListPage() {
   const { category } = useParams(); // URL: /movies/:category  
@@ -21,6 +15,8 @@ export default function MovieListPage() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
   const [hasMore, setHasMore] = useState(true); // 추가 데이터 존재 여부
+
+  usePageTitle(`${categoryTitles[category]} | PVING`);
 
   // 초기 및 카테고리 변경 시 1페이지 불러오기
   useEffect(() => {
@@ -81,7 +77,7 @@ export default function MovieListPage() {
         <>
           <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-bold mb-8">
-              {CATEGORY_TITLES[category] || "영화"}
+              {categoryTitles[category] || "영화"}
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 ">
               {movies.map((movie) => (

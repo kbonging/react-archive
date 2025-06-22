@@ -3,13 +3,12 @@ import { Link } from "react-router-dom";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
-export default function MovieCard({ movie, onSearch }) {
+export default function MovieCard({ movie }) {
   return (
     <div className="w-full rounded-lg overflow-hidden shadow-md bg-black">
         <Link
           key={movie.id}
           to={`/movies/detail/${movie.id}`}
-          onClick={() => onSearch(movie.title)}
         >
           <img
             src={`${IMAGE_BASE_URL}${movie.poster_path}`}

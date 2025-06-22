@@ -43,7 +43,7 @@ export default function Banner() {
     <>
       {/* 배경 이미지 */}
       <div
-        className="fixed inset-0 z-0 bg-center bg-cover"
+        className="absolute inset-0 z-0 bg-center bg-cover"
         style={{ backgroundImage: `url(${backdropUrl})` }}
       />
 

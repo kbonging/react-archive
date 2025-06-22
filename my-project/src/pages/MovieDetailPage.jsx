@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { fetchMovieDetails, fetchMovieCredits } from "../api/tmdb";
 import { isFavoriteMovie, addFavoriteMovie, removeFavoriteMovie } from "../api/favorites";
-
+import usePageTitle from "../hooks/usePageTitle";
 
 export default function MovieDetailPage() {
   const { id } = useParams();           // URL에서 movie ID를 받아옴
@@ -13,35 +13,37 @@ export default function MovieDetailPage() {
   const [error, setError] = useState(null);
   const [isLiked, setIsLiked] = useState(false); // 찜 여부 설정
 
+  usePageTitle(movie ? `${movie.title} | PVING` : "영화 상세페이지 | PVING");
+
   // 1) 영화 기본 상세 정보 로딩
   useEffect(() => {
     setLoading(true);
     setError(null);
-
+    
     fetchMovieDetails(id)
-      .then((data) => {
-        setMovie(data);
-        setIsLiked(isFavoriteMovie(data.id));
-      })
-      .catch((err) => {
-        console.error(err);
-        setError("영화 상세 정보를 불러오는 중 오류가 발생했습니다.");
-      });
+    .then((data) => {
+      setMovie(data);
+      setIsLiked(isFavoriteMovie(data.id));
+    })
+    .catch((err) => {
+      console.error(err);
+      setError("영화 상세 정보를 불러오는 중 오류가 발생했습니다.");
+    });
   }, [id]);
-
+  
   // 2) 영화 출연진(credits) 로딩
   useEffect(() => {
     fetchMovieCredits(id)
-      .then((data) => {
-        setCredits(data.cast || []);
-      })
-      .catch((err) => {
-        console.error(err);
-        // 출연진 실패는 치명적이지 않으니 에러 메시지만 콘솔에 남김
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    .then((data) => {
+      setCredits(data.cast || []);
+    })
+    .catch((err) => {
+      console.error(err);
+      // 출연진 실패는 치명적이지 않으니 에러 메시지만 콘솔에 남김
+    })
+    .finally(() => {
+      setLoading(false);
+    });
   }, [id]);
 
   // 찜 버튼 

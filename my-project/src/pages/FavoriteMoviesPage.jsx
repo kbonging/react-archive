@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getFavoriteMovies, removeFavoriteMovie } from "../api/favorites";
 import MovieCard from "../components/MovieCard";
+import usePageTitle from "../hooks/usePageTitle";
 
 export default function FavoriteMoviesPage() {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  usePageTitle(`찜 목록 | PVING`);
 
   useEffect(() => {
     setLoading(true);
