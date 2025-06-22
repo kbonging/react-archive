@@ -1,7 +1,7 @@
 import axios from "axios";
 import { CATEGORY_API_PATHS } from "../util/constants"; 
 
-const API_KEY = "";
+const API_KEY = "756004d44a98ff07e34549cdd940f3c4";
 const BASE_URL = "https://api.themoviedb.org/3";
 
 const categoryMap = CATEGORY_API_PATHS;

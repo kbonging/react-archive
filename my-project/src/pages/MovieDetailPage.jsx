@@ -85,7 +85,7 @@ export default function MovieDetailPage() {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center"
+      className="mt-10 min-h-screen bg-cover bg-center"
       style={{ backgroundImage: `url(${backdropUrl})` }}
     >
       <div className="bg-black bg-opacity-70 min-h-screen">
@@ -147,10 +147,10 @@ export default function MovieDetailPage() {
               </Link>
             </div>
 
-            <p className="leading-relaxed">{movie.overview}</p>
+            <p className="leading-relaxed w-1/2">{movie.overview}</p>
 
-            <dl className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-              <div>
+            <dl className="pt-4 text-sm">
+              <div className="mb-4">
                 <dt className="font-semibold mb-1">제작사</dt>
                 <dd>
                   {movie.production_companies
@@ -158,7 +158,7 @@ export default function MovieDetailPage() {
                     .join(", ") || "정보 없음"}
                 </dd>
               </div>
-              <div>
+              <div className="">
                 <dt className="font-semibold mb-1">출연</dt>
                 {topCast.length > 0 ? (
                   <dd>
@@ -178,7 +178,7 @@ export default function MovieDetailPage() {
           </div>
 
           {/* 우측: 포스터 */}
-          <div className="w-64 flex-shrink-0">
+          <div className="flex-shrink-0">
             <img
               src={
                 movie.poster_path
