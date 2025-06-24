@@ -4,6 +4,7 @@ import Home from "../pages/Home";
 import MovieListPage from "../pages/MovieListPage";
 import MovieDetailPage from "../pages/MovieDetailPage";
 import FavoriteMoviesPage from "../pages/FavoriteMoviesPage";
+import NotFoundPage from "../pages/NotFoundPage";
 
 export default function AppRouter() {
   return (
@@ -12,6 +13,7 @@ export default function AppRouter() {
       <Route path="/movies/:category" element={<MovieListPage/>} />
       <Route path="/movies/detail/:id" element={<MovieDetailPage />} />
       <Route path="/movies/favorite" element={<FavoriteMoviesPage/>} />
+      <Route path="/*" element={<NotFoundPage />} />
     </Routes>
   );
 }
